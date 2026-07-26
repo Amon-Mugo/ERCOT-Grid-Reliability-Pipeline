@@ -1,0 +1,24 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Secrets / env
+.env
+airflow/secrets/
+
+# Airflow runtime artifacts
+airflow/logs/
+airflow/plugins/
+
+# Terraform
+terraform/.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+
+# dbt
+dbt_packages/
+target/
+
+# OS
+.DS_Store
