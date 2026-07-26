@@ -2,6 +2,9 @@ import logging
 from datetime import datetime,timedelta,timezone
 from eia_client import EIAClientError, fetch_dataset
 from s3_loader import S3LoaderError,upload_ndjson
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logging.basicConfig(level=logging.INFO,format='%(asctime)s %(levelname)s %(message)s') #
 logger = logging.getLogger(__name__) #trace_logger
