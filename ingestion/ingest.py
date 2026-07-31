@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime,timedelta,timezone
-from eia_client import EIAClientError, fetch_dataset
-from s3_loader import S3LoaderError,upload_ndjson
+from ingestion.eia_client import EIAClientError, fetch_dataset
+from ingestion.s3_loader import S3LoaderError, upload_ndjson
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -20,7 +20,7 @@ DATASET={
         "facets":{"respondent":[RESPONDENT],"type":["TI"]},
     },
     "generation_by_fuel":{
-        "route":"electricity/rto/region-data/data",
+        "route":"electricity/rto/fuel-type-data/data",
         "facets":{"respondent":[RESPONDENT]},
     },
 

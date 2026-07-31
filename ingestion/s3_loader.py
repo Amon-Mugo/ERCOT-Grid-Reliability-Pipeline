@@ -4,7 +4,7 @@ import boto3
 from typing import Any
 from botocore.exceptions import ClientError
 
-BUCKET_NAME = "ercot-grid-pipeline"
+BUCKET_NAME = "ercot-grid-pipeline-raw"
 MAX_RETRIES = 3
 RETRY_BACKOFF_SECONDS = (20, 30, 40)
 
