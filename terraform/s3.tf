@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "ercot_grid_pipeline_raw" {
-    bucket="ercot-grid-pipeline-raw"
+    bucket=var.raw_bucket_name
     tags = {
         Project     = "ercot-grid-reliability-pipeline"
         Layer       = "raw"
@@ -61,7 +61,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "ercot_grid_pipeline_raw" {
 #curated addons to make the infractructure more polished and separate
 
 resource "aws_s3_bucket" "ercot_grid_pipeline_curated"{
-    bucket = "ercot-grid-pipeline-curated"
+    bucket = var.curated_bucket_name
     tags={
         Project      ="ercot-grid-reliability-pipeline"
         Layer        ="curated"

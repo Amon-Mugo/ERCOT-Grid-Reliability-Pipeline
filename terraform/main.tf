@@ -1,19 +1,22 @@
-terraform {
-  required_version = ">= 1.5"
-
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
+terraform{
+  required_version=">=1.5"
+  required_providers{
+    aws={
+      source="hashicorp/aws"
+      version="~> 5.0"
     }
   }
-  # No backend block yet — using local state for the initial apply.
-  # Once ercot-grid-pipeline-raw/curated exist, we'll add an S3 backend
-  # (a third bucket, or a dedicated prefix in curated) and migrate state.
-}
+  #backend  will leave in aws cloud rather than local
+  backend "s3"{
+    bucket="ercot-grid-pipeline-tfstate" #bucket name
+    key="ercot-grid-pipeline/terraform.tfstate" #where it will be stored
+    region="us-east-1"
+    use_lockfile=true
+    encrypt=true
 
-provider "aws" {
-  region  = "us-east-1"
-  profile = "data-corp-admin"
+  }
 }
-
+provider "aws"{
+  region=var.aws_region
+  profile=var.aws_profile
+}
