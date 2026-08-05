@@ -6,11 +6,8 @@ class TransformValidationError(Exception):
 
 #comparison of two columns raws and curateds
 def validators_no_parse_failures(
-    df: DataFrame,
-    raw_col: str,
-    curated_col: str,
-    dataset_name: str
-) -> None:
+    df: DataFrame,raw_col: str,curated_col: str,dataset_name: str) -> None:
+
     failure_counts = df.filter(
         df[raw_col].isNotNull() & df[curated_col].isNull()
     ).count()
@@ -25,9 +22,7 @@ def validators_no_parse_failures(
 
 # validates that all required columns are not null
 def validators_required_columns_not_null(
-    df: DataFrame,
-    required_columns: list[str],
-    dataset_name: str) -> None:
+    df: DataFrame,required_columns: list[str],dataset_name: str) -> None:
 
     for col_name in required_columns:
         null_count = df.filter(df[col_name].isNull()).count()
