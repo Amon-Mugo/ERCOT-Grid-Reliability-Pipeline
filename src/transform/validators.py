@@ -31,3 +31,4 @@ def validators_required_columns_not_null(df: DataFrame, required_columns: list[s
                 f"[{dataset_name}] Required column '{col_name}' has {null_count} null value(s). "
                 f"Aborting write to curated S3."
             )
+
