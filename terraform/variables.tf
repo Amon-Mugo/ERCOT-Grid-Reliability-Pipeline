@@ -56,3 +56,8 @@ variable "curated_bucket_name" {
     type        = string
     default     = "ercot-grid-pipeline-curated"
 }
+variable "emr_image_tag" {
+  description = "ECR image tag for the EMR Serverless custom Spark image"
+  type        = string
+  default     = "v3"
+}

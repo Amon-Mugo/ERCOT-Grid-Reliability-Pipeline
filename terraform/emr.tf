@@ -4,6 +4,9 @@ resource "aws_emrserverless_application" "ercot_pyspark" {
     name=var.emr_app_name
     release_label="emr-7.1.0"
     type="SPARK"
+    image_configuration {
+        image_uri = "${aws_ecr_repository.ercot_pyspark.repository_url}:${var.emr_image_tag}"
+    }
     maximum_capacity{
         cpu="4 vCPU"
         memory="16 GB"

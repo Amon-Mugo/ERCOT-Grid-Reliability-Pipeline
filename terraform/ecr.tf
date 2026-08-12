@@ -52,3 +52,25 @@ resource "aws_ecr_lifecycle_policy" "ercot_pyspark" {
     ]
   })
 }
+# Allows EMR Serverless to pull the custom Spark image
+resource "aws_ecr_repository_policy" "ercot_pyspark_emr_access" {
+  repository = aws_ecr_repository.ercot_pyspark.name
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AllowEMRServerlessPull"
+        Effect = "Allow"
+        Principal = {
+          Service = "emr-serverless.amazonaws.com"
+        }
+        Action = [
+          "ecr:BatchGetImage",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:DescribeImages"
+        ]
+      }
+    ]
+  })
+}
