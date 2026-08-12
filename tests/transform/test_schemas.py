@@ -28,8 +28,8 @@ RAW_SCHEMAS= [
 
     pytest.param(
         RAW_INTERCHANGE_SCHEMA,
-        ["fromba", "toba", "period", "value", "value-units"], #fields
-        ["fromba","toba","period"], # cannot be null
+        ["respondent", "period", "value", "value-units"], #fields
+        ["respondent","period"], # cannot be null
         ["value","value-units"], # can be null
         id="raw_interchange",
     ),
@@ -87,8 +87,7 @@ class TestCuratedDemandSchema:
 
 class TestCuratedInterchangeSchema:
     EXPECTED_TYPES={
-        "fromba":StringType(),
-        "toba":StringType(),
+        "respondent":StringType(),
         "period":TimestampType(),
         "value":DoubleType(),
         "value_units":StringType(),
@@ -104,8 +103,7 @@ class TestCuratedInterchangeSchema:
 
     def test_nullability(self):
         by_name={f.name:f for f in CURATED_INTERCHANGE_SCHEMA.fields}
-        assert by_name["fromba"].nullable is False
-        assert by_name["toba"].nullable is False
+        assert by_name["respondent"].nullable is False
         assert by_name["period"].nullable is False
         assert by_name["ingestion_date"].nullable is False
         assert by_name["value"].nullable is True

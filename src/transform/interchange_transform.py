@@ -13,8 +13,7 @@ def transform_interchange(df:DataFrame,ingestion_date:str) -> DataFrame:
     validators_no_parse_failures(with_parsed,"value","parsed_value","interchange")
 
     curated=with_parsed.withColumn("ingestion_date",lit(ingestion_date).cast("date")) .select(
-        col("fromba"),
-        col("toba"),
+        col("respondent"),
         col("parsed_period").alias("period"),
         col("parsed_value").alias("value"),
         col("value-units").alias("value_units"),
@@ -23,7 +22,7 @@ def transform_interchange(df:DataFrame,ingestion_date:str) -> DataFrame:
 
     validators_required_columns_not_null(
         curated,
-        required_columns=["fromba","toba","period","ingestion_date"],
+        required_columns=["respondent","period","ingestion_date"],
         dataset_name="interchange",
     )
     return curated

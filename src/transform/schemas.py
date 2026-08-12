@@ -20,11 +20,10 @@ RAW_DEMAND_SCHEMA=StructType([
     StructField("value-units",StringType(),nullable=True),
 ])
 
-#Raw INterchange Schema
+#Raw Interchange Schema (Total Interchange only — 'type':'TI' facet has no fromba/toba)
 
 RAW_INTERCHANGE_SCHEMA=StructType([
-    StructField("fromba",StringType(),nullable=False),
-    StructField("toba",StringType(),nullable=False),
+    StructField("respondent",StringType(),nullable=False),
     StructField("period",StringType(),nullable=False),
     StructField("value",StringType(),nullable=True),
     StructField("value-units",StringType(),nullable=True),
@@ -53,11 +52,10 @@ CURATED_DEMAND_SCHEMA = StructType(
     ]
 )
 
-# curated interchange schema
+# curated interchange schema (Total Interchange — system-wide net flow)
 CURATED_INTERCHANGE_SCHEMA = StructType(
     [
-        StructField("fromba", StringType(), nullable=False),
-        StructField("toba", StringType(), nullable=False),
+        StructField("respondent", StringType(), nullable=False),
         StructField("period", TimestampType(), nullable=False),
         StructField("value", DoubleType(), nullable=True),
         StructField("value_units", StringType(), nullable=True),
@@ -76,4 +74,3 @@ CURATED_GENERATION_SCHEMA = StructType(
         StructField("ingestion_date", DateType(), nullable=False),
     ]
 )
-

@@ -21,4 +21,4 @@ dbt_packages/
 target/
 
 # OS
-.DS_Store
+.DS_Storesrc_package.zip

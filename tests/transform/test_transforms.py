@@ -46,8 +46,8 @@ TRANSFORM_CASES = [
         transform_interchange,
         RAW_INTERCHANGE_SCHEMA,
         CURATED_INTERCHANGE_SCHEMA,
-        ("ERCO", "SPP", "2026-08-01T14", "50.0", "megawatthours"),  
-        "fromba",
+        ("ERCO", "2026-08-01T14", "50.0", "megawatthours"),  
+        "respondent",
         id="interchange",
     ),
     pytest.param(
@@ -132,26 +132,6 @@ class TestSharedTransformBehavior:
             transform_fn(raw_df,INGESTION_DATE)
 
 #class for specific tests
-class TestInterchangeSpecificFields:
-    def test_fromba_and_toba_both_present_in_curated_output(self, spark: SparkSession):
-        raw_df = spark.createDataFrame(
-            [("ERCO", "SPP", "2026-08-01T14", "50.0", "megawatthours")],
-            schema=RAW_INTERCHANGE_SCHEMA,
-        )
-        curated_df = transform_interchange(raw_df, INGESTION_DATE)
-        result = curated_df.collect()[0]
-        assert result["fromba"] == "ERCO"
-        assert result["toba"] == "SPP"
-
-    def test_raises_when_toba_is_null(self, spark: SparkSession):
-        relaxed_schema = _with_nullable(RAW_INTERCHANGE_SCHEMA, "toba")
-        raw_df = spark.createDataFrame(
-            [("ERCO", None, "2026-08-01T14", "50.0", "megawatthours")],
-            schema=relaxed_schema,
-        )
-        with pytest.raises(TransformValidationError, match="toba"):
-            transform_interchange(raw_df, INGESTION_DATE)
-
 class TestGenerationSpecificFields:
     def test_fueltype_renamed_to_fuel_type(self, spark: SparkSession):
         raw_df = spark.createDataFrame(
