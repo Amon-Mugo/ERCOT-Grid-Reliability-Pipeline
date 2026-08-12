@@ -1,0 +1,20 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal":{
+                "AWS": "arn:aws:iam::046374119072:user/49p02000-s"
+            },
+            "Action": "sts:AssumeRole",
+            "Condition":{
+                "StringEquals":{
+                    "sts:ExternalId": "IPC40054_SFCRole=5_LvU6C+fwNMdCfjpeoiwDlaDzsoA="
+
+                }
+            }
+
+            
+        }
+    ]
+}
