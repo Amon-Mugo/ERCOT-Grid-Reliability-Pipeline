@@ -1,0 +1,11 @@
+-- used to readfile from s3 and write to snowflake
+
+USE ROLE ACCOUNTADMIN;
+CREATE STORAGE INTEGRATION IF NOT EXISTS ercot_s3_integration
+    TYPE=EXTERNAL_STAGE
+    STORAGE_PROVIDER=S3
+    ENABLED=TRUE
+    STORAGE_AWS_ROLE_ARN='arn:aws:iam::011294328070:role/ercot-snowflake-integration'
+    STORAGE_ALLOWED_LOCATIONS=('s3://ercot-grid-pipeline-curated/');
+
+GRANT READ ON STAGE AWS_SNOWFLAKE_PIPELINE.RAW.ERCOT_CURATED_STAGE TO ROLE ERCOT_LOADER;
