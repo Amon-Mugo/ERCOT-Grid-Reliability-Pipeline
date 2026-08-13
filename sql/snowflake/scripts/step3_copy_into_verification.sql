@@ -1,6 +1,6 @@
 -- Manual verification of COPY INTO load mechanics — run directly in Snowsight
 -- to prove the DELETE-then-COPY idempotency pattern before formalizing it
-
+-- also for manula verification of the procedures testing the pattern
 
 
 --RAW INTERCHANGE
@@ -9,7 +9,6 @@ USE SCHEMA RAW;
 SET run_date = '2026-08-11';
 
 DELETE FROM raw_interchange WHERE dt = $run_date::DATE;
-
 COPY INTO raw_interchange (respondent, period, value, value_units, ingestion_date, dt)
 FROM (
     SELECT
