@@ -1,0 +1,45 @@
+version: 2
+
+sources:
+  - name: ercot_raw
+    database: AWS_SNOWFLAKE_PIPELINE
+    schema: RAW
+    tables:
+      - name: raw_demand
+        columns:
+          - name: respondent
+            tests:
+              - not_null
+          - name: period
+            tests:
+              - not_null
+          - name: dt
+            tests:
+              - not_null
+
+      - name: raw_interchange
+        columns:
+          - name: respondent
+            tests:
+              - not_null
+          - name: period
+            tests:
+              - not_null
+          - name: dt
+            tests:
+              - not_null
+
+      - name: raw_generation_by_fuel
+        columns:
+          - name: respondent
+            tests:
+              - not_null
+          - name: period
+            tests:
+              - not_null
+          - name: fuel_type
+            tests:
+              - not_null
+          - name: dt
+            tests:
+              - not_null
