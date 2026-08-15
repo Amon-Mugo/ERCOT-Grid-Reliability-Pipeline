@@ -1,0 +1,69 @@
+version: 2
+
+models:
+  - name: mart_demand_vs_generation
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - period
+              - respondent
+              - fuel_type
+    columns:
+      - name: period
+        tests:
+          - not_null
+      - name: respondent
+        tests:
+          - not_null
+      - name: fuel_type
+        tests:
+          - not_null
+      - name: demand_mwh
+        tests:
+          - not_null
+      - name: total_generation_mwh
+        tests:
+          - not_null
+
+  - name: mart_interchange_balance
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - period
+              - respondent
+    columns:
+      - name: period
+        tests:
+          - not_null
+      - name: respondent
+        tests:
+          - not_null
+      - name: interchange_mwh
+        tests:
+          - not_null
+      - name: flow_direction
+        tests:
+          - not_null
+
+  - name: mart_grid_reliability
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - period
+              - respondent
+    columns:
+      - name: period
+        tests:
+          - not_null
+      - name: respondent
+        tests:
+          - not_null
+      - name: demand_mwh
+        tests:
+          - not_null
+      - name: grid_status
+        tests:
+          - not_null

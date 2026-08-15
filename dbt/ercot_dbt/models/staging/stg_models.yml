@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: stg_demand
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - period
+              - respondent
+    columns:
+      - name: period
+        tests:
+          - not_null
+      - name: respondent
+        tests:
+          - not_null
+      - name: demand_mwh
+        tests:
+          - not_null
+
+  - name: stg_interchange
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - period
+              - respondent
+    columns:
+      - name: period
+        tests:
+          - not_null
+      - name: respondent
+        tests:
+          - not_null
+      - name: interchange_mwh
+        tests:
+          - not_null
+
+  - name: stg_generation_by_fuel
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - period
+              - respondent
+              - fuel_type
+    columns:
+      - name: period
+        tests:
+          - not_null
+      - name: respondent
+        tests:
+          - not_null
+      - name: fuel_type
+        tests:
+          - not_null
+      - name: generation_mwh
+        tests:
+          - not_null
