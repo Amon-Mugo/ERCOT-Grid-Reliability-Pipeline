@@ -24,6 +24,8 @@ BEGIN
 
     v_run_date := TO_VARCHAR(:run_date, 'YYYY-MM-DD');
 
+    BEGIN TRANSACTION;
+
     DELETE FROM raw_generation_by_fuel WHERE dt = :run_date;
 
     v_sql := 'COPY INTO raw_generation_by_fuel (respondent, fuel_type, period, value, value_units, ingestion_date, dt) ' ||
@@ -42,6 +44,8 @@ BEGIN
              'FORCE = TRUE';
 
     EXECUTE IMMEDIATE :v_sql;
+
+    COMMIT;
 
     RETURN 'raw_generation_by_fuel loaded for dt=' || v_run_date;
 END;
@@ -62,11 +66,11 @@ BEGIN
     IF (run_date IS NULL) THEN
         RAISE null_run_date_exception;
     END IF;
-
     v_run_date := TO_VARCHAR(:run_date, 'YYYY-MM-DD');
 
-    DELETE FROM raw_demand WHERE dt = :run_date;
+    BEGIN TRANSACTION;
 
+    DELETE FROM raw_demand WHERE dt = :run_date;
     v_sql := 'COPY INTO raw_demand (respondent, period, value, value_units, ingestion_date, dt) ' ||
              'FROM (SELECT ' ||
              '  $1:respondent::VARCHAR, ' ||
@@ -80,8 +84,9 @@ BEGIN
              'PATTERN = ''.*\\.parquet'' ' ||
              'ON_ERROR = ABORT_STATEMENT ' ||
              'FORCE = TRUE';
-
     EXECUTE IMMEDIATE :v_sql;
+
+    COMMIT;
 
     RETURN 'raw_demand loaded for dt=' || v_run_date;
 END;
@@ -105,6 +110,8 @@ BEGIN
 
     v_run_date := TO_VARCHAR(:run_date, 'YYYY-MM-DD');
 
+    BEGIN TRANSACTION;
+
     DELETE FROM raw_interchange WHERE dt = :run_date;
 
     v_sql := 'COPY INTO raw_interchange (respondent, period, value, value_units, ingestion_date, dt) ' ||
@@ -122,6 +129,8 @@ BEGIN
              'FORCE = TRUE';
 
     EXECUTE IMMEDIATE :v_sql;
+
+    COMMIT;
 
     RETURN 'raw_interchange loaded for dt=' || v_run_date;
 END;
