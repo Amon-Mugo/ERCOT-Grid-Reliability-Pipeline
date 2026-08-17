@@ -1,0 +1,8 @@
+# requirements-dev.txt
+# CI/local dev only — not shipped in the Airflow image.
+-r requirements.txt
+pytest
+pyspark==3.5.9
+pandas
+pyarrow
+flake8

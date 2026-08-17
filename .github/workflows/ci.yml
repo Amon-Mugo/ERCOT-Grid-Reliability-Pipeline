@@ -1,0 +1,113 @@
+#set up rules for the CI PIPELINE
+
+name: CI
+
+on: 
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+env:
+  PYTHON_VERSION: "3.12"
+  AWS_REGION: "us-east-1"
+
+jobs:
+  lint-and-test:
+    name: Lint & and Pytest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set_up_python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements-dev.txt
+          pip install sqlfluff sqlfluff-templater-dbt
+
+      - name: Lint Python (flake8)
+        run: flake8 src/ ingestion/ airflow/dags/ --max-line-length=100
+      
+      - name: Lint SQL (sqlfluff)
+        run: |
+          sqlfluff lint dbt/ercot_dbt/models \
+          --dialect snowflake \
+          --templater dbt \
+          --project-dir dbt/ercot_dbt
+      
+      - name: Run Pytest
+        run: pytest --tb=short -v 
+
+#AIRFLOW AND DAG SYNTAX CHECKS
+  dag-validate:
+    name: Validate Airflow DAG
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 
+        uses: actions/checkout@v4
+      - name: Set_up_python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install Airflow & project dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install "apache-airflow==3.3.1" \
+            "apache-airflow-providers-amazon==9.34.0" \
+            "apache-airflow-providers-snowflake==6.16.0"
+
+      - name: Check for Dag import erros 
+        env:
+          AIRFLOW_HOME: ${{ github.workspace }}/airflow # set the airflow home directory
+          PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/src # set the python path
+        run : |
+          airflow db migrate
+          airflow  dags list-import-errors --output json >import_errors.json
+          if [ "$(cat import_errors.json)" != "[]" ]; then
+              echo "DAG import errors found:"
+              cat import_errors.json
+              exit 1
+          fi
+
+  terraform-plan:
+    name: Terraform Plan(read-only)
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configure AWS Credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_CI_PLAN_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name : Set up terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false 
+      
+      - name: Terraform  fmt check
+        run: terraform -chdir=terraform fmt -check -recursive # check for terraform formatting errors
+      
+      - name: Terraform init
+        run: terraform -chdir=terraform init
+      
+      - name: Terraform plan
+        run: terraform -chdir=terraform plan -no-color
+              
+
+    
+
+
