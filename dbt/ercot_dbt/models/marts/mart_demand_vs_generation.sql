@@ -2,7 +2,8 @@ with generation as (
     select * from {{ ref('stg_generation_by_fuel') }}
 
 ),
-demand as(
+
+demand as (
     select * from {{ ref('stg_demand') }}
 ),
 
@@ -18,8 +19,9 @@ joined as (
         demand.demand_units
     from generation
     left join demand
-      on generation.period = demand.period
-      and generation.respondent = demand.respondent
+        on
+            generation.period = demand.period
+            and generation.respondent = demand.respondent
 ),
 
 --window functions
@@ -36,9 +38,10 @@ final as (
         demand_units,
 
         sum(generation_mwh) over (partition by period) as total_generation_mwh,
-        sum(generation_mwh) over (partition by period) - demand_mwh as supply_demand_delta_mwh
-    
-    from joined 
+        sum(generation_mwh) over (partition by period)
+        - demand_mwh as supply_demand_delta_mwh
+
+    from joined
 )
 
 select * from final

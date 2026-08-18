@@ -1,5 +1,5 @@
 with interchange as (
-    SELECT* from {{ref('stg_interchange')}}
+    select * from {{ ref('stg_interchange') }}
 ),
 
 final as (
@@ -8,11 +8,10 @@ final as (
         respondent,
         interchange_mwh,
         interchange_units,
-        case 
-          when interchange_mwh > 0 then 'net_export'
-          when interchange_mwh < 0 then 'net_import'
-          when interchange_mwh = 0 then 'balanced'
-          else NULL
+        case
+            when interchange_mwh > 0 then 'net_export'
+            when interchange_mwh < 0 then 'net_import'
+            when interchange_mwh = 0 then 'balanced'
         end as flow_direction
     from interchange
 )

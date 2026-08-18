@@ -37,7 +37,7 @@ jobs:
       - name: Lint SQL (sqlfluff)
         run: |
           cd dbt/ercot_dbt
-          sqlfluff lint models --dialect snowflake --templater dbt
+          sqlfluff lint models --dialect snowflake --templater jinja
       
       - name: Run Pytest
         run: pytest --tb=short -v 
