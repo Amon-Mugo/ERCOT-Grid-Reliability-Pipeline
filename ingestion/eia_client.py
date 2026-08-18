@@ -13,7 +13,7 @@ RETRY_STATUS_CODES = {429, 500, 502, 503, 504}  # rate limiting
 
 
 class EIAClientError(Exception):
-    pass #class to handle errors but intentionally empty
+    pass  # class to handle errors but intentionally empty
 
 
 def _get_api_key() -> str:
@@ -25,8 +25,8 @@ def _get_api_key() -> str:
 
 # internal helper function
 def _request_page(
-    session: requests.Session, router: str, params: list[tuple[str, str]]) -> dict[str, Any]:
-    
+        session: requests.Session, router: str, params: list[tuple[str, str]]) -> dict[str, Any]:
+
     clean_route = router.lstrip("/")
     url = f"{BASE_URL}/{clean_route}"
     last_error = ""

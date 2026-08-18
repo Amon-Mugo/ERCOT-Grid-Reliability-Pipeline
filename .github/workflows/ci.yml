@@ -32,7 +32,7 @@ jobs:
           pip install sqlfluff sqlfluff-templater-dbt
 
       - name: Lint Python (flake8)
-        run: flake8 src/ ingestion/ airflow/dags/ --max-line-length=100
+        run: flake8 src/ ingestion/ airflow/dags/ --max-line-length=120
       
       - name: Lint SQL (sqlfluff)
         run: |

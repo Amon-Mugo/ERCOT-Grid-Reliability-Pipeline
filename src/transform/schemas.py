@@ -1,8 +1,8 @@
-# explicitly tell spark to use which columns 
-#defines raw columns and also curated columns
+# explicitly tell spark to use which columns
+# defines raw columns and also curated columns
 
 
-from pyspark.sql.types import(
+from pyspark.sql.types import (
     StructType,
     StructField,
     StringType,
@@ -11,25 +11,25 @@ from pyspark.sql.types import(
     TimestampType,
 )
 
-# raw columns  that are not curated which is fetched from api 
-#Raw Demand Schema
-RAW_DEMAND_SCHEMA=StructType([
-    StructField("respondent",StringType(),nullable=False),
-    StructField("period",StringType(),nullable=False),
-    StructField("value",StringType(),nullable=True),
-    StructField("value-units",StringType(),nullable=True),
+# raw columns  that are not curated which is fetched from api
+# Raw Demand Schema
+RAW_DEMAND_SCHEMA = StructType([
+    StructField("respondent", StringType(), nullable=False),
+    StructField("period", StringType(), nullable=False),
+    StructField("value", StringType(), nullable=True),
+    StructField("value-units", StringType(), nullable=True),
 ])
 
-#Raw Interchange Schema (Total Interchange only — 'type':'TI' facet has no fromba/toba)
+# Raw Interchange Schema (Total Interchange only — 'type':'TI' facet has no fromba/toba)
 
-RAW_INTERCHANGE_SCHEMA=StructType([
-    StructField("respondent",StringType(),nullable=False),
-    StructField("period",StringType(),nullable=False),
-    StructField("value",StringType(),nullable=True),
-    StructField("value-units",StringType(),nullable=True),
+RAW_INTERCHANGE_SCHEMA = StructType([
+    StructField("respondent", StringType(), nullable=False),
+    StructField("period", StringType(), nullable=False),
+    StructField("value", StringType(), nullable=True),
+    StructField("value-units", StringType(), nullable=True),
 ])
 
-#Raw Generation Schema
+# Raw Generation Schema
 RAW_GENERATION_SCHEMA = StructType(
     [
         StructField("respondent", StringType(), nullable=False),
@@ -40,7 +40,7 @@ RAW_GENERATION_SCHEMA = StructType(
     ]
 )
 
-#curated columns
+# curated columns
 # curated demand schema
 CURATED_DEMAND_SCHEMA = StructType(
     [
