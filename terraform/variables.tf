@@ -59,5 +59,5 @@ variable "curated_bucket_name" {
 variable "emr_image_tag" {
   description = "ECR image tag for the EMR Serverless custom Spark image"
   type        = string
-  default     = "v3"
+  default     = "v5"
 }
