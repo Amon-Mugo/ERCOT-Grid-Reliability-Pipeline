@@ -63,7 +63,7 @@ jobs:
           pip install -r requirements.txt
           pip install "apache-airflow==3.3.1" \
             "apache-airflow-providers-amazon==9.34.0" \
-            "apache-airflow-providers-snowflake==6.16.0"
+            "apache-airflow-providers-snowflake==6.16.0"\
              graphviz
 
       - name: Check for Dag import erros 
