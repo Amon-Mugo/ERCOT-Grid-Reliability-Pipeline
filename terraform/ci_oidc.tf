@@ -116,6 +116,7 @@ data "aws_iam_policy_document" "ci_plan_permissions" {
       "s3:GetBucketAcl",
       "s3:GetBucketTagging",
       "s3:GetBucketLocation",
+      "s3:GetBucketCORS",
       "s3:GetEncryptionConfiguration",
       "s3:GetLifecycleConfiguration",
       "s3:ListBucket",
