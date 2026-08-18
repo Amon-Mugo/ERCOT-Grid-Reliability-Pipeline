@@ -122,6 +122,8 @@ data "aws_iam_policy_document" "ci_plan_permissions" {
       "s3:GetBucketRequestPayment",
       "s3:GetBucketObjectLockConfiguration",
       "s3:GetBucketPolicyStatus",
+      "s3:GetBucketPublicAccessBlock",
+      "s3:GetBucketOwnershipControls",
       "s3:GetReplicationConfiguration",
       "s3:GetAccelerateConfiguration",
       "s3:GetEncryptionConfiguration",
