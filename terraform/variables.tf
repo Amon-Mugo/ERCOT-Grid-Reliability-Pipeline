@@ -7,9 +7,9 @@ variable "aws_region" {
 }
 
 variable "aws_profile" {
-  description = "AWS  CLI/SSO profile used for authentication"
+  description = "AWS CLI/SSO profile for local auth. Empty string uses the default credential chain (used in CI, where OIDC-issued env vars are picked up automatically)."
   type        = string
-  default     = "data-corp-admin"
+  default     = ""
 }
 
 variable "project_name" {
