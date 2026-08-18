@@ -2,7 +2,7 @@
 resource "aws_ecr_repository" "ercot_pyspark" {
   name                 = var.ecr_repo_name
   image_tag_mutability = "IMMUTABLE" # Ensures tags cannot be overwritten
-  force_delete        = false       # Prevents accidental deletion of repo with images
+  force_delete         = false       # Prevents accidental deletion of repo with images
 
   image_scanning_configuration {
     scan_on_push = true

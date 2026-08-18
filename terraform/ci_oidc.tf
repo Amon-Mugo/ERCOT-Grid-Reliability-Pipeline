@@ -47,7 +47,7 @@ data "aws_iam_policy_document" "ci_plan_trust" {
 
     # allow assume role to assume the role that has the terraform state access
     condition {
-      test     = "StringEquals" 
+      test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:aud"
       values   = ["sts.amazonaws.com"]
     }
@@ -55,7 +55,7 @@ data "aws_iam_policy_document" "ci_plan_trust" {
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = [
+      values = [
         "repo:Amon-Mugo@205969589/ERCOT-Grid-Reliability-Pipeline@1312976241:ref:refs/heads/main",
         "repo:Amon-Mugo@205969589/ERCOT-Grid-Reliability-Pipeline@1312976241:pull_request*",
       ]
@@ -67,7 +67,7 @@ data "aws_iam_policy_document" "ci_plan_trust" {
 resource "aws_iam_role" "ci_plan_role" {
   name                 = "ercot-ci-plan-role"
   assume_role_policy   = data.aws_iam_policy_document.ci_plan_trust.json # attach the OIDC trust policy
-  max_session_duration = 3600 #1 hour
+  max_session_duration = 3600                                            #1 hour
 
   tags = {
     Project   = "ercot-grid-reliability-pipeline"
@@ -80,9 +80,9 @@ resource "aws_iam_role" "ci_plan_role" {
 
 data "aws_iam_policy_document" "ci_plan_permissions" {
   statement {
-    sid       = "AllowReadOnly"
-    effect    = "Allow"
-    actions   = [
+    sid    = "AllowReadOnly"
+    effect = "Allow"
+    actions = [
       "s3:GetObject",
       "s3:ListBucket",
     ]
@@ -95,9 +95,9 @@ data "aws_iam_policy_document" "ci_plan_permissions" {
   #scoped for s3 native lookup table permission in (use_lookfile=true) in main.tf
 
   statement {
-    sid       = "TerraformS3NativeLookup"
-    effect    = "Allow"
-    actions   = [
+    sid    = "TerraformS3NativeLookup"
+    effect = "Allow"
+    actions = [
       "s3:PutObject",
       "s3:DeleteObject",
     ]
@@ -108,8 +108,8 @@ data "aws_iam_policy_document" "ci_plan_permissions" {
 
   #readonly s3 bucket access for terraform state
   statement {
-    sid     = "ReadOnlyS3"
-    effect  = "Allow"
+    sid    = "ReadOnlyS3"
+    effect = "Allow"
     actions = [
       "s3:GetBucketPolicy",
       "s3:GetBucketVersioning",
@@ -126,8 +126,8 @@ data "aws_iam_policy_document" "ci_plan_permissions" {
 
   #readonly iam statement
   statement {
-    sid     = "ReadOnlyIAM"
-    effect  = "Allow"
+    sid    = "ReadOnlyIAM"
+    effect = "Allow"
     actions = [
       "iam:GetRole",
       "iam:GetRolePolicy",
@@ -145,8 +145,8 @@ data "aws_iam_policy_document" "ci_plan_permissions" {
 
   #readonly ecr statement
   statement {
-    sid     = "ReadOnlyECR"
-    effect  = "Allow"
+    sid    = "ReadOnlyECR"
+    effect = "Allow"
     actions = [
       "ecr:DescribeRepositories",
       "ecr:GetRepositoryPolicy",
@@ -156,11 +156,11 @@ data "aws_iam_policy_document" "ci_plan_permissions" {
     ]
     resources = ["*"]
   }
-    
+
   #emr readonly statement
   statement {
-    sid     = "ReadOnlyEMRServerless"
-    effect  = "Allow"
+    sid    = "ReadOnlyEMRServerless"
+    effect = "Allow"
     actions = [
       "emr-serverless:GetApplication",
       "emr-serverless:ListApplications",
@@ -171,8 +171,8 @@ data "aws_iam_policy_document" "ci_plan_permissions" {
 
   #getcaller identity statement
   statement {
-    sid     = "STSGetCallerIdentity"
-    effect  = "Allow"
+    sid    = "STSGetCallerIdentity"
+    effect = "Allow"
     actions = [
       "sts:GetCallerIdentity",
     ]
