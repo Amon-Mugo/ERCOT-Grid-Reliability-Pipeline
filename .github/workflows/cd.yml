@@ -1,0 +1,50 @@
+#CD PIPELINE for docker->ECR pyspark-> s3, terraform apply ,dbt/snowflake
+#this automates the CD pipeline for the project for build and push 
+#of the contious deployment pipeline (cd) for a pysspark station
+
+name: CD
+on  :
+  push:
+    branches: [main]
+
+env:
+  AWS_REGION: "us-east-1"
+  ECR_REPOSITORY : "ercot-pyspark"
+
+jobs:
+  docker-build-push:
+    name: Build & Push Pyspark Image
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    outputs:
+      image_tag: ${{ steps.image_meta.outputs.tag }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configure AWS Credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_CD_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Login to Amazon ECR
+        id: ecr_login
+        uses: aws-actions/amazon-ecr-login@v2
+      
+      - name: Set image tag
+        id: image_meta
+        run: echo "tag=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+      - name: Build image
+        run: |
+          docker build \
+          --network=host \
+          -t ${{ steps.ecr_login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ steps.image_meta.outputs.tag }} \
+          .
+      - name: Push image
+        run: |
+          docker push \
+          ${{ steps.ecr_login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ steps.image_meta.outputs.tag }}
+
+
