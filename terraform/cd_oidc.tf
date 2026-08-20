@@ -24,7 +24,7 @@ data "aws_iam_policy_document" "cd_trust" {
       values = [
         "repo:Amon-Mugo@205969589/ERCOT-Grid-Reliability-Pipeline@1312976241:ref:refs/heads/main",
         "repo:Amon-Mugo@205969589/ERCOT-Grid-Reliability-Pipeline@1312976241:environment:production",
-      
+
       ]
     }
   }
