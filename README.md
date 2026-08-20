@@ -68,7 +68,8 @@ Data Flow & Lifecycle
  The EIA interchange dataset supports both total net interchange (TI) and balancing-authority pairs (fromba/toba). Carried respondent through using TI-only to reduce schema complexity while retaining complete accuracy for ERCOT's single-BA boundary.Per-Dataset Fault Isolation in PySpark: run_transform.py processes demand, interchange, and generation independently. A dataset-level failure won't block healthy datasets from writing curated output, though the job still exits non-zero so Airflow catches and alerts on partial failures.Least-Privilege Role Separation in Snowflake: Segmented Snowflake access control using four strict roles:$$\text{ERCOT\_LOADER} \xrightarrow{\text{Raw Loads}} \text{ERCOT\_TRANSFORMER} \xrightarrow{\text{dbt Transforms}} \text{ERCOT\_ADMIN} \xrightarrow{\text{DDL}} \text{ercot\_app} \xrightarrow{\text{Dashboard Read-Only}}$$OIDC & Keyless CI/CD Authentication: GitHub Actions authenticates to AWS via OIDC federation instead of static IAM access keys, eliminating secret rotation risks. Trust policies are restricted to refs/heads/main and production environment scopes.Immutable Container Images: Docker images are tagged by commit SHA and pushed to an IMMUTABLE ECR repository—preventing tag overwrites and guaranteeing 1:1 traceability between deployed artifacts and Git commits.Gated Deployment Pipeline: Infrastructure changes via Terraform require explicit manual sign-off through GitHub Environment approvals after reviewing generated terraform plan artifacts.
 
 ## Repository Structure
- ercot-grid-pipeline/
+```text
+ercot-grid-pipeline/
 ├── .github/
 │   └── workflows/          # CI (ci.yml) and CD (cd.yml) pipelines
 ├── airflow/
@@ -83,7 +84,6 @@ Data Flow & Lifecycle
 ├── streamlit_app/          # Streamlit-in-Snowflake dashboard code
 ├── terraform/              # IaC definitions (S3, IAM, ECR, EMR, OIDC)
 └── images/                 # Architecture & dashboard assets
-
 
 ## Docker DEBUGING 
 ERCOT Airflow DAG — Debug Log
