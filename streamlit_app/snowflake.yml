@@ -1,0 +1,9 @@
+definition_version: "1"
+
+streamlit:
+  name: ercot_grid_dashboard
+  stage: streamlit_stage
+  query_warehouse: ercot_app_wh
+  main_file: streamlit_app.py
+  env_file: environment.yml
+  title: "ERCOT Grid Reliability Dashboard"
