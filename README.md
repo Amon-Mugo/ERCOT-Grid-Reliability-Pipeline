@@ -1,4 +1,4 @@
-[paste the full README draft from earlier here]
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 # ERCOT Grid Reliability Pipeline
