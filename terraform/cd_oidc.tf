@@ -22,8 +22,8 @@ data "aws_iam_policy_document" "cd_trust" {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
       values = [
-        "repo:Amon-Mugo/ERCOT-Grid-Reliability-Pipeline:ref:refs/heads/main",
-        "repo:Amon-Mugo/ERCOT-Grid-Reliability-Pipeline:environment:production",
+        "repo:Amon-Mugo@205969589/ERCOT-Grid-Reliability-Pipeline@1312976241:ref:refs/heads/main",
+        "repo:Amon-Mugo@205969589/ERCOT-Grid-Reliability-Pipeline@1312976241:environment:production",
       ]
     }
   }

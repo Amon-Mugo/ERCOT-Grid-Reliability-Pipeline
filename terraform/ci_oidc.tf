@@ -56,8 +56,8 @@ data "aws_iam_policy_document" "ci_plan_trust" {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
       values = [
-        "repo:Amon-Mugo/ERCOT-Grid-Reliability-Pipeline:ref:refs/heads/main",
-        "repo:Amon-Mugo/ERCOT-Grid-Reliability-Pipeline:pull_request",
+        "repo:Amon-Mugo@205969589/ERCOT-Grid-Reliability-Pipeline@1312976241:ref:refs/heads/main",
+        "repo:Amon-Mugo@205969589/ERCOT-Grid-Reliability-Pipeline@1312976241:pull_request",
       ]
     }
   }
