@@ -23,3 +23,4 @@ target/
 # OS
 .DS_Storesrc_package.zip
 src_package.zip
+streamlit_app/output/
