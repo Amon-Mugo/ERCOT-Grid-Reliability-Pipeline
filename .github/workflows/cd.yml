@@ -47,4 +47,151 @@ jobs:
           docker push \
           ${{ steps.ecr_login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ steps.image_meta.outputs.tag }}
 
+  pyspark-sync-s3:
+    name: Sync PySpark Package to S3
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_CD_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Build src_package.zip
+        run: zip -r src_package.zip src/ -x "*__pycache__*" "*.pyc"
+
+      - name: Sync package to S3
+        run: |
+          aws s3 cp src_package.zip \
+            s3://ercot-grid-pipeline-raw/_jobs/src_package.zip
+
+
+  terraform-plan-apply:
+    name: Terraform Plan
+    runs-on: ubuntu-latest
+    needs: [docker-build-push, pyspark-sync-s3]
+    permissions:
+      id-token: write
+      contents: read
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_CD_ROLE_ARN }}
+          aws-region: us-east-1
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.0"
+      - name: Terraform init
+        run: terraform init
+      - name: Terraform plan
+        env:
+          TF_VAR_emr_image_tag: ${{ needs.docker-build-push.outputs.image_tag }}
+        run: terraform plan -out=tfplan
+      - name: Upload plan artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: terraform/tfplan
+          retention-days: 1
+
+
+  terraform-apply:
+    name: Terraform Apply
+    runs-on: ubuntu-latest
+    needs: [terraform-plan-apply]
+    environment: production
+    permissions:
+      id-token: write
+      contents: read
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_CD_ROLE_ARN }}
+          aws-region: us-east-1
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.0"
+      - name: Terraform init
+        run: terraform init
+      - name: Download plan artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: terraform
+      - name: Terraform apply
+        run: terraform apply tfplan
+
+  dbt-snowflake-sync:
+    name: dbt Build (Snowflake)
+    runs-on: ubuntu-latest
+    needs: [terraform-apply]
+
+    defaults:
+      run:
+        working-directory: dbt/ercot_dbt
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dbt
+        run: pip install dbt-snowflake
+
+      - name: Write private key to file
+        run: |
+          mkdir -p ~/.snowflake/keys
+          echo "${{ secrets.SNOWFLAKE_PRIVATE_KEY }}" > ~/.snowflake/keys/rsa_key.p8
+          chmod 600 ~/.snowflake/keys/rsa_key.p8
+
+      - name: Write dbt profile
+        run: |
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml << EOF
+          ercot_dbt:
+            target: ci
+            outputs:
+              ci:
+                type: snowflake
+                account: "ktexbpp-hdc79460"
+                user: "AMON"
+                private_key_path: "/home/runner/.snowflake/keys/rsa_key.p8"
+                role: ERCOT_TRANSFORMER
+                database: AWS_SNOWFLAKE_PIPELINE
+                warehouse: COMPUTE_WH
+                schema: ANALYTICS
+                threads: 4
+                client_session_keep_alive: False
+          EOF
+
+      - name: dbt deps
+        run: dbt deps
+
+      - name: dbt build
+        run: dbt build --target ci
 

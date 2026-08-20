@@ -1,5 +1,5 @@
-#used in setting up the CI/CD pipeline key less authentications for GITHUB ACTIONS to run
-#automated terraform plan checks in ci/cd
+#used in setting up the CI pipeline key less authentications for GITHUB ACTIONS to run
+#automated terraform plan checks in ci
 
 variable "github_repo" {
   description = "Github repo in 'owner/repo' format that is allowed to assume CI plan role"
