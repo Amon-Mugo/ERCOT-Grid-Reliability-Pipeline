@@ -134,49 +134,55 @@ Fix: generated a fixed secret via python3 -c "import secrets; print(secrets.toke
 
 
 ## Getting Started
-Prerequisites
-AWS CLI & Terraform >= 1.5
+## Prerequisites
 
-Snowflake Account with ACCOUNTADMIN access
+- AWS CLI & Terraform >= 1.5
+- Snowflake Account with ACCOUNTADMIN access
+- Docker & Apache Airflow
+- EIA API Key ([Request Here](#))
 
-Docker & Apache Airflow
+## Quickstart
 
-EIA API Key (Request Here)
+### 1. Provision AWS Infrastructure
 
-Quickstart
-Provision AWS Infrastructure
-
-Bash
+```bash
 cd terraform
 terraform init
 terraform apply
-Configure Snowflake Storage & Roles
-Execute the setup scripts in Snowflake in order:
+```
 
-sql/snowflake/raw_schema.sql
+### 2. Configure Snowflake Storage & Roles
 
-sql/snowflake/procedures/load_raw_tables.sql
+Execute the setup scripts in Snowflake **in order**:
 
-sql/snowflake/streamlit/setup_streamlit_app.sql
+1. `sql/snowflake/raw_schema.sql`
+2. `sql/snowflake/procedures/load_raw_tables.sql`
+3. `sql/snowflake/streamlit/setup_streamlit_app.sql`
 
-Run dbt Models
+### 3. Run dbt Models
 
-Bash
+```bash
 cd dbt/ercot_dbt
 dbt deps
 dbt build --target prod
-Start Airflow Orchestration
+```
 
-Bash
+### 4. Start Airflow Orchestration
+
+```bash
 docker compose up -d
-Access the Airflow UI at http://localhost:8080 and enable ercot_pipeline_dag.
+```
 
-Deploy Dashboard
+Access the Airflow UI at [http://localhost:8080](http://localhost:8080) and enable the `ercot_pipeline_dag`.
 
-Bash
+### 5. Deploy Dashboard
+
+```bash
 cd streamlit_app
 snow streamlit deploy
-Author
-Amon Mugo
+```
 
+## Author
+
+**Amon Mugo**
 Cloud & Data Engineer
